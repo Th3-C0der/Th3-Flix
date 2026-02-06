@@ -35,7 +35,10 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ data, isTooltipDisabled
 
       setIsChecking(true);
       try {
-        const result = await checkInWatchlist(data.id, data.type);
+        const result = await checkInWatchlist(
+          data.id,
+          data.type === "multi" ? "movie" : data.type
+        );
         if (result.success) {
           setIsSaved(result.isInWatchlist);
         }
@@ -61,7 +64,10 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ data, isTooltipDisabled
     startTransition(async () => {
       try {
         if (isSaved) {
-          const result = await removeFromWatchlist(data.id, data.type);
+          const result = await removeFromWatchlist(
+            data.id,
+            data.type === "multi" ? "movie" : data.type
+          );
 
           if (result.success) {
             setIsSaved(false);
@@ -85,7 +91,7 @@ const BookmarkButton: React.FC<BookmarkButtonProps> = ({ data, isTooltipDisabled
         } else {
           const watchlistItem = {
             id: data.id,
-            type: data.type,
+            type: data.type === "multi" ? "movie" : data.type,
             adult: data.adult,
             backdrop_path: data.backdrop_path,
             poster_path: data.poster_path || null,
