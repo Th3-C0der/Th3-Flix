@@ -7,7 +7,6 @@ import { Link, Skeleton } from "@heroui/react";
 import { useInViewport } from "@mantine/hooks";
 import { useQuery } from "@tanstack/react-query";
 import { kebabCase } from "string-ts";
-import { fetchAnimeList } from "@/actions/anime";
 import { DiscoverAnimeFetchQueryType } from "@/types/anime";
 
 interface AnimeHomeListProps {
@@ -19,8 +18,12 @@ const AnimeHomeList: React.FC<AnimeHomeListProps> = ({ name, param }) => {
   const key = kebabCase(name) + "-list";
   const { ref, inViewport } = useInViewport();
   const { data, isPending } = useQuery({
-    queryFn: () => fetchAnimeList(param, 1, 20),
-    queryKey: [key],
+    queryFn: async () => {
+      const res = await fetch(`/api/anime/list?type=${param}&page=1&limit=20`);
+      if (!res.ok) throw new Error("Failed to fetch anime list");
+      return res.json();
+    },
+    queryKey: [key, param],
     enabled: inViewport,
   });
 
@@ -49,7 +52,7 @@ const AnimeHomeList: React.FC<AnimeHomeListProps> = ({ name, param }) => {
             </Link>
           </div>
           <Carousel>
-            {data?.data.map((item) => (
+            {data?.data.map((item: any) => (
               <div
                 key={item.node.id}
                 className="embla__slide flex min-h-fit max-w-fit items-center px-1 py-2"

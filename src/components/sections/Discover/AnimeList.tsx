@@ -1,7 +1,6 @@
 "use client";
 
 import AnimePosterCard from "@/components/sections/Anime/Cards/Poster";
-import { fetchAnimeList } from "@/actions/anime";
 import useDiscoverFilters from "@/hooks/useDiscoverFilters";
 import { Spinner } from "@heroui/react";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -14,7 +13,11 @@ const AnimeDiscoverList = () => {
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isPending } = useInfiniteQuery({
     queryKey: ["discover-anime", queryType],
-    queryFn: ({ pageParam }) => fetchAnimeList(queryType as any, pageParam, 20),
+    queryFn: async ({ pageParam }) => {
+      const res = await fetch(`/api/anime/list?type=${queryType}&page=${pageParam}&limit=20`);
+      if (!res.ok) throw new Error("Failed to fetch anime list");
+      return res.json();
+    },
     initialPageParam: 1,
     getNextPageParam: (lastPage, _, lastPageParam) => {
       if (!lastPage.paging.next) return undefined;
@@ -40,7 +43,7 @@ const AnimeDiscoverList = () => {
     <div className="flex flex-col gap-4">
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
         {data?.pages.map((page) =>
-          page.data.map((item) => (
+          page.data.map((item: any) => (
             <AnimePosterCard key={item.node.id} anime={item.node} variant="bordered" />
           )),
         )}

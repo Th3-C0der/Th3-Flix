@@ -2,7 +2,6 @@
 
 export const runtime = "edge";
 
-import { fetchAnimeById } from "@/actions/anime";
 import { Params } from "@/types";
 import { Spinner } from "@heroui/react";
 import { useScrollIntoView } from "@mantine/hooks";
@@ -11,6 +10,7 @@ import { notFound } from "next/navigation";
 import { Suspense, use } from "react";
 import dynamic from "next/dynamic";
 import { NextPage } from "next";
+
 const AnimeRelatedSection = dynamic(() => import("@/components/sections/Anime/Details/Related"));
 const AnimeBackdropSection = dynamic(() => import("@/components/sections/Anime/Details/Backdrop"));
 const AnimeOverviewSection = dynamic(() => import("@/components/sections/Anime/Details/Overview"));
@@ -28,7 +28,11 @@ const AnimeDetailPage: NextPage<Params<{ id: number }>> = ({ params }) => {
     isPending,
     error,
   } = useQuery({
-    queryFn: () => fetchAnimeById(id),
+    queryFn: async () => {
+      const res = await fetch(`/api/anime/${id}`);
+      if (!res.ok) throw new Error("Failed to fetch anime details");
+      return res.json();
+    },
     queryKey: ["anime-detail", id],
   });
 
@@ -40,7 +44,7 @@ const AnimeDetailPage: NextPage<Params<{ id: number }>> = ({ params }) => {
     );
   }
 
-  if (error) notFound();
+  if (error || !anime) notFound();
 
   return (
     <div className="mx-auto max-w-5xl">

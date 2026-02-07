@@ -1,7 +1,6 @@
 "use client";
 
 import { tmdb } from "@/api/tmdb";
-import { fetchAnimeList } from "@/actions/anime";
 import { convertMALAnimeToAppFormat } from "@/utils/mal";
 import { DiscoverMoviesFetchQueryType } from "@/types/movie";
 
@@ -65,8 +64,12 @@ const useFetchDiscoverMulti = async ({
                 topRated: "topRated",
             };
 
-            const animeRes = await fetchAnimeList(animeTypeMap[type] || "discover", page, 10);
-            return animeRes.data.map(item => convertMALAnimeToAppFormat(item.node));
+            const queryType = animeTypeMap[type] || type || "discover";
+            const res = await fetch(`/api/anime/list?type=${queryType}&page=${page}&limit=10`);
+            if (!res.ok) throw new Error("Failed to fetch anime from API");
+
+            const animeRes = await res.json();
+            return animeRes.data.map((item: any) => convertMALAnimeToAppFormat(item.node));
         } catch (e) {
             console.error("Anime fetch failed in multi", e);
             return [];
