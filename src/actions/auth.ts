@@ -2,6 +2,7 @@
 
 import { SupabaseClient } from "@supabase/supabase-js";
 import { createClient } from "@/utils/supabase/server";
+import { headers } from "next/headers";
 import {
   ForgotPasswordFormInput,
   ForgotPasswordFormSchema,
@@ -32,6 +33,13 @@ type AuthAction<T> = (data: T, supabase: SupabaseClient) => ActionResponse;
  * @param action The core logic of the server action.
  * @returns An async function that serves as the server action.
  */
+const getBaseUrl = async () => {
+  const head = await headers();
+  const host = head.get("host") || "th3-flix.pages.dev";
+  const protocol = host.includes("localhost") ? "http" : "https";
+  return `${protocol}://${host}`;
+};
+
 const createAuthAction = <T extends { captchaToken?: string }>(
   schema: z.ZodSchema<T>,
   action: AuthAction<T>,
@@ -100,9 +108,13 @@ const signUpAction: AuthAction<RegisterFormInput> = async (data, supabase) => {
   }
 
   // Create user
+  const baseUrl = await getBaseUrl();
   const { data: authData, error: signUpError } = await supabase.auth.signUp({
     email: data.email,
     password: data.password,
+    options: {
+      emailRedirectTo: `${baseUrl}/api/auth/callback`,
+    },
   });
 
   if (signUpError) return { success: false, message: signUpError.message };
@@ -131,7 +143,10 @@ const sendResetPasswordEmailAction: AuthAction<ForgotPasswordFormInput> = async 
   data,
   supabase,
 ) => {
-  const { error } = await supabase.auth.resetPasswordForEmail(data.email);
+  const baseUrl = await getBaseUrl();
+  const { error } = await supabase.auth.resetPasswordForEmail(data.email, {
+    redirectTo: `${baseUrl}/api/auth/callback?next=/auth/reset-password`,
+  });
 
   if (error) return { success: false, message: error.message };
 

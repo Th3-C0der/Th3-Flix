@@ -2,37 +2,34 @@ import withPWAInit from "@ducanh2912/next-pwa";
 import { NextConfig } from "next/dist/server/config";
 
 // Temporarily disable PWA for testing
-const withPWA = (config: NextConfig): NextConfig => config;
-
-// Enable this when PWA is working correctly
-// const withPWA = withPWAInit({
-//   dest: "public",
-//   register: true,
-//   disable: process.env.NODE_ENV === "development",
-//   reloadOnOnline: true,
-//   cacheOnFrontEndNav: true,
-//   aggressiveFrontEndNavCaching: true,
-//   workboxOptions: {
-//     skipWaiting: true,
-//     disableDevLogs: true,
-//     runtimeCaching: [
-//       {
-//         urlPattern: /^https?:\/\/image\.tmdb\.org\/.*/i,
-//         handler: 'CacheFirst',
-//         options: {
-//           cacheName: 'tmdb-images',
-//           expiration: {
-//             maxEntries: 1000,
-//             maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
-//           },
-//           cacheableResponse: {
-//             statuses: [0, 200],
-//           },
-//         },
-//       },
-//     ],
-//   },
-// });
+const withPWA = withPWAInit({
+  dest: "public",
+  register: true,
+  disable: process.env.NODE_ENV === "development",
+  reloadOnOnline: true,
+  cacheOnFrontEndNav: true,
+  aggressiveFrontEndNavCaching: true,
+  workboxOptions: {
+    skipWaiting: true,
+    disableDevLogs: true,
+    runtimeCaching: [
+      {
+        urlPattern: /^https?:\/\/image\.tmdb\.org\/.*/i,
+        handler: 'CacheFirst',
+        options: {
+          cacheName: 'tmdb-images',
+          expiration: {
+            maxEntries: 1000,
+            maxAgeSeconds: 60 * 60 * 24 * 30, // 30 days
+          },
+          cacheableResponse: {
+            statuses: [0, 200],
+          },
+        },
+      },
+    ],
+  },
+});
 
 const nextConfig: NextConfig = {
   eslint: {
