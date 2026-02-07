@@ -71,8 +71,16 @@ const AuthForms: React.FC = () => {
   }
 
   return (
-    <div className="relative flex min-h-screen w-full flex-col items-center justify-center gap-5 p-5 lg:flex-row">
-      <div className="pointer-events-none relative z-40 container mx-auto flex size-full flex-col items-center justify-center p-3 pt-16">
+    <div
+      className={cn(
+        "relative z-50 flex h-screen w-screen flex-col items-center justify-center overflow-hidden",
+        "before:pointer-events-none before:absolute before:inset-0 before:z-20 before:opacity-40 dark:before:opacity-70",
+        "dark:before:bg-[radial-gradient(circle_at_center,transparent_0%,black_100%)]",
+        "before:bg-[radial-gradient(circle_at_center,transparent_0%,white_100%)]",
+        SpacingClasses.reset,
+      )}
+    >
+      <div className="pointer-events-none relative z-50 container mx-auto flex size-full flex-col items-center justify-center p-3">
         <Card
           shadow="lg"
           className="border-foreground-200 bg-background/70 dark:bg-background/80 pointer-events-auto w-full max-w-lg border-2 p-1 backdrop-blur-md md:p-3"

@@ -14,15 +14,16 @@ import useFetchDiscoverMulti from "@/hooks/useFetchDiscoverMulti";
 interface MultiHomeListProps {
     name: string;
     param: string;
+    genres?: string;
 }
 
-const MultiHomeList: React.FC<MultiHomeListProps> = ({ name, param }) => {
+const MultiHomeList: React.FC<MultiHomeListProps> = ({ name, param, genres }) => {
     const key = kebabCase(name) + "-multi-list";
     const { ref, inViewport } = useInViewport();
 
     const { data, isPending } = useQuery({
-        queryFn: () => useFetchDiscoverMulti({ page: 1, type: param as any }),
-        queryKey: [key],
+        queryFn: () => useFetchDiscoverMulti({ page: 1, type: param as any, genres }),
+        queryKey: [key, param, genres],
         enabled: inViewport,
     });
 

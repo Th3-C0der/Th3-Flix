@@ -1,4 +1,7 @@
 import { siteConfig } from "@/config/site";
+
+export const runtime = "edge";
+
 import dynamic from "next/dynamic";
 import { Metadata, NextPage } from "next/types";
 import { Suspense } from "react";

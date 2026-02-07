@@ -5,7 +5,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { Button, Modal, ModalBody, ModalContent, Skeleton, Tooltip } from "@heroui/react";
 import clsx from "clsx";
 import { Video } from "tmdb-ts/dist/types/credits";
-import { Youtube } from "@/utils/icons";
+import { ChevronLeft, ChevronRight, Youtube } from "@/utils/icons";
 import { colors, ColorType } from "@/types/component";
 
 interface TrailerProps {
@@ -50,7 +50,7 @@ const Trailer: React.FC<TrailerProps> = ({ videos, color = "primary" }) => {
                         onPress={c.scrollPrev}
                         size="sm"
                         radius="full"
-                        icon="mingcute:left-fill"
+                        icon={<ChevronLeft />}
                         tooltip="Previous"
                       />
                     </div>
@@ -60,7 +60,7 @@ const Trailer: React.FC<TrailerProps> = ({ videos, color = "primary" }) => {
                         onPress={c.scrollNext}
                         size="sm"
                         radius="full"
-                        icon="mingcute:right-fill"
+                        icon={<ChevronRight />}
                         tooltip="Next"
                       />
                     </div>

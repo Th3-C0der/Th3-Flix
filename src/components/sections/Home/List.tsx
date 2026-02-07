@@ -22,9 +22,11 @@ const HomePageList: React.FC = () => {
   const multiRows = [
     { name: "Trending Today", param: "todayTrending" },
     { name: "Trending This Week", param: "thisWeekTrending" },
-    { name: "Popular", param: "popular" },
+    { name: "Popular Choice", param: "popular" },
     { name: "Top Rated", param: "topRated" },
-    { name: "Upcoming", param: "upcoming" },
+    { name: "Comedy Hits", param: "discover", genres: "35" },
+    { name: "Animated Adventures", param: "discover", genres: "16" },
+    { name: "New Arrivals", param: "upcoming" },
   ];
 
   const getSpinnerColor = () => {
