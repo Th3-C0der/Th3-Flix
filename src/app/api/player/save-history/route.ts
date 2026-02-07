@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 
 type ResponseBody = UnifiedPlayerEventData & { completed?: boolean };
 
+export const runtime = "edge";
+
 export const POST = async (request: Request) => {
   try {
     const body = (await request.json()) as ResponseBody;

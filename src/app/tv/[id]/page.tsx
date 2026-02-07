@@ -1,5 +1,7 @@
 "use client";
 
+export const runtime = "edge";
+
 import { tmdb } from "@/api/tmdb";
 import { Params } from "@/types";
 import { Spinner } from "@heroui/react";

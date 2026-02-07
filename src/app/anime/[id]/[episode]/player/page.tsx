@@ -1,5 +1,7 @@
 "use client";
 
+export const runtime = "edge";
+
 import { fetchAnimeById } from "@/actions/anime";
 import AnimePlayer from "@/components/sections/Anime/Player/Player";
 import { Params } from "@/types";
@@ -32,7 +34,7 @@ const AnimePlayerPage: NextPage<Params<{ id: number; episode: number }>> = ({ pa
   if (error || !anime) notFound();
 
   const totalEpisodes = anime.num_episodes || 0;
-  
+
   // Validate episode number
   if (episode < 1 || (totalEpisodes > 0 && episode > totalEpisodes)) {
     notFound();

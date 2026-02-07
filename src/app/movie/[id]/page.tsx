@@ -1,5 +1,7 @@
 "use client";
 
+export const runtime = "edge";
+
 import { Suspense, use } from "react";
 import { Spinner } from "@heroui/spinner";
 import { useQuery } from "@tanstack/react-query";

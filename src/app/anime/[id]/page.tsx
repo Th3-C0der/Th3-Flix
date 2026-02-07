@@ -1,5 +1,7 @@
 "use client";
 
+export const runtime = "edge";
+
 import { fetchAnimeById } from "@/actions/anime";
 import { Params } from "@/types";
 import { Spinner } from "@heroui/react";

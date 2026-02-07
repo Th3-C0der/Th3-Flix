@@ -1,5 +1,7 @@
 "use client";
 
+export const runtime = "edge";
+
 import { tmdb } from "@/api/tmdb";
 import { getMovieLastPosition } from "@/actions/histories";
 import MoviePlayer from "@/components/sections/Movie/Player/Player";

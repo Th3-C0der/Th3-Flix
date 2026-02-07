@@ -1,5 +1,8 @@
 import { siteConfig } from "@/config/site";
 import { Metadata, NextPage } from "next/types";
+
+export const runtime = "edge";
+
 import { cache, Suspense } from "react";
 import dynamic from "next/dynamic";
 import { createClient } from "@/utils/supabase/server";
