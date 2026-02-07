@@ -3,19 +3,43 @@
 import Rating from "@/components/ui/other/Rating";
 import type { HistoryDetail } from "@/types/movie";
 import { cn } from "@/utils/helpers";
-import { PlayOutline } from "@/utils/icons";
+import { PlayOutline, Trash } from "@/utils/icons";
 import { formatDuration, getImageUrl, timeAgo } from "@/utils/movies";
-import { Chip, Image, Progress } from "@heroui/react";
+import { addToast, Button, Chip, Image, Progress } from "@heroui/react";
 import Link from "next/link";
-import { useCallback } from "react";
+import { useCallback, useTransition } from "react";
+import { removeFromHistory } from "@/actions/histories";
+import { queryClient } from "@/app/providers";
 
 interface ResumeCardProps {
   media: HistoryDetail;
 }
 
 const ResumeCard: React.FC<ResumeCardProps> = ({ media }) => {
+  const [isPending, startTransition] = useTransition();
   const releaseYear = new Date(media.release_date).getFullYear();
   const posterImage = getImageUrl(media.backdrop_path || media.poster_path || "");
+
+  const handleRemove = (e: any) => {
+    if (e && typeof e.preventDefault === "function") e.preventDefault();
+    if (e && typeof e.stopPropagation === "function") e.stopPropagation();
+    startTransition(async () => {
+      const res = await removeFromHistory(media.id);
+      if (res.success) {
+        addToast({
+          title: "Removed from your journey",
+          color: "success",
+        });
+        queryClient.invalidateQueries({ queryKey: ["continue-watching"] });
+      } else {
+        addToast({
+          title: "Failed to remove",
+          description: res.message,
+          color: "danger",
+        });
+      }
+    });
+  };
 
   const getRedirectLink = useCallback(() => {
     if (media.type === "movie") {
@@ -46,12 +70,24 @@ const ResumeCard: React.FC<ResumeCardProps> = ({ media }) => {
               variant="faded"
               radius="sm"
               color="warning"
-              className="absolute right-2 top-2 z-20"
+              className="absolute right-2 top-2 z-20 transition-all group-hover:right-11"
               classNames={{ content: "font-bold" }}
             >
               S{media.season} E{media.episode}
             </Chip>
           )}
+          <Button
+            isIconOnly
+            size="sm"
+            radius="full"
+            variant="flat"
+            color="danger"
+            className="absolute right-2 top-2 z-30 bg-black/40 opacity-0 backdrop-blur-md transition-opacity group-hover:opacity-100"
+            onPress={handleRemove}
+            isLoading={isPending}
+          >
+            {!isPending && <Trash size={16} />}
+          </Button>
           <Chip
             radius="sm"
             size="sm"

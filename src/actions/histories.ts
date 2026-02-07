@@ -245,3 +245,42 @@ export const getTvShowLastPosition = async (
     return 0;
   }
 };
+export const removeFromHistory = async (id: number): ActionResponse => {
+  try {
+    const supabase = await createClient();
+
+    // Get current user
+    const {
+      data: { user },
+      error: userError,
+    } = await supabase.auth.getUser();
+
+    if (userError || !user) {
+      return {
+        success: false,
+        message: "You must be logged in to modify history",
+      };
+    }
+
+    const { error } = await supabase.from("histories").delete().eq("user_id", user.id).eq("id", id);
+
+    if (error) {
+      console.info("History delete error:", error);
+      return {
+        success: false,
+        message: "Failed to remove history",
+      };
+    }
+
+    return {
+      success: true,
+      message: "Removed from history",
+    };
+  } catch (error) {
+    console.info("Unexpected error:", error);
+    return {
+      success: false,
+      message: "An unexpected error occurred",
+    };
+  }
+};
