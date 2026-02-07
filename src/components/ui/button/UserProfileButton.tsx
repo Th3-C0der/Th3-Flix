@@ -2,7 +2,7 @@ import { signOut } from "@/actions/auth";
 import useBreakpoints from "@/hooks/useBreakpoints";
 import useSupabaseUser from "@/hooks/useSupabaseUser";
 import { DropdownItemProps } from "@/types/component";
-import { env } from "@/utils/env";
+
 import { Gear, Logout, User } from "@/utils/icons";
 import { useRouter } from "@bprogress/next/app";
 import {
@@ -55,7 +55,7 @@ const UserProfileButton: React.FC = () => {
   if (isLoading) return null;
 
   const guest = !user;
-  const avatar = `${env.NEXT_PUBLIC_AVATAR_PROVIDER_URL}${user?.email}`;
+  const avatar = `${process.env.NEXT_PUBLIC_AVATAR_PROVIDER_URL}${user?.email}`;
 
   const ProfileButton = (
     <Button

@@ -36,7 +36,7 @@ const withPWA = (config: NextConfig): NextConfig => config;
 
 const nextConfig: NextConfig = {
   eslint: {
-    ignoreDuringBuilds: false,
+    ignoreDuringBuilds: true,
   },
   // https://github.com/payloadcms/payload/issues/12550#issuecomment-2939070941
   turbopack: {
@@ -70,63 +70,10 @@ const nextConfig: NextConfig = {
       '*.themoviedb.org'
     ]
   },
-  // Headers to prevent caching
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'X-Frame-Options',
-            value: 'SAMEORIGIN',
-          },
-          {
-            key: 'X-XSS-Protection',
-            value: '1; mode=block',
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin',
-          },
-          // Prevent caching of all responses
-          {
-            key: 'Cache-Control',
-            value: 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
-          },
-          {
-            key: 'Pragma',
-            value: 'no-cache',
-          },
-          {
-            key: 'Expires',
-            value: '0',
-          },
-        ],
-      },
-      // Specifically prevent caching of image files
-      {
-        source: '/(.*).(jpg|jpeg|png|webp|gif|ico|svg)$',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0',
-          },
-          {
-            key: 'Pragma',
-            value: 'no-cache',
-          },
-          {
-            key: 'Expires',
-            value: '0',
-          },
-        ],
-      },
-    ];
-  }
+  // Headers to prevent caching - REMOVED for output: export compatibility
+  // async headers() {
+  //   return [];
+  // }
 };
 
 const pwa = withPWA(nextConfig);

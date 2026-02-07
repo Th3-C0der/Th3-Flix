@@ -1,4 +1,4 @@
-import { env } from "./env";
+
 
 const MAL_API_BASE_URL = "https://api.myanimelist.net/v2";
 
@@ -76,7 +76,7 @@ export interface MALAnimeList {
  */
 export function getMALHeaders(): HeadersInit {
   return {
-    "X-MAL-CLIENT-ID": env.NEXT_PUBLIC_MYANIMELIST_CLIENT_ID,
+    "X-MAL-CLIENT-ID": process.env.NEXT_PUBLIC_MYANIMELIST_CLIENT_ID || "",
     "Content-Type": "application/json",
   };
 }
